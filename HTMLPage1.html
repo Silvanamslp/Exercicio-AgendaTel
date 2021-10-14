@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+
+<html lang="pt=br" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Agenda</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <style>
+        div{
+            margin-left:400px;
+        }
+        fieldset{
+             width:520px;
+             border: 2px solid darkblue;
+             
+        }
+        h2{
+            
+            color:darkblue;
+        }  
+        #nome{
+            width:240px;
+        }
+        
+        .entrada{
+            margin-left:30px;
+            border: 2px solid darkblue;
+            
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container-md">
+        <fieldset>
+        <legend><h2> Agenda Telefônica </h2></legend>
+            <table class="table" >
+                <thead>
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Telefone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      <th scope="row"><input type="text" id="nome" class="entrada" placeholder="digite o nome"></th>
+                      <td> <input type="tel" id="cel" class="entrada" placeholder="DDD 000000000"><br></td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><input type="button" id="botao" class="entrada" value="Adicionar"></th>
+                      <td>  <input type="button" id="botao2" class="entrada" value="Excluir"></td>
+                    </tr> 
+                    <tr>
+                      <td>  <ul id="listaCtt"></ul> </td>
+                    </tr> 
+                </tbody>
+            </table>
+        </fieldset>  
+    </div>
+
+    <script>
+            window.onload = escuta;
+
+            function escuta(){
+                var botao = document.getElementById("botao");
+                botao.onclick = adiciona;
+
+                var botao2 = document.getElementById("botao2");
+                botao2.onclick = exclui;
+
+                carregaPagina();
+            }
+
+            function carregaPagina(){
+                var arrayItens = localStorage.getItem("agenda");
+            
+                if(arrayItens != null){
+                    arrayItens = JSON.parse(arrayItens);
+
+                    var ul = document.getElementById("listaCtt");
+
+                    for(var i=0; i<arrayItens.length; i++){
+                        var li = document.createElement("li");
+                        li.innerHTML = arrayItens[i];
+                        ul.appendChild(li);
+                    }
+                }
+            }
+            function salva(contato){
+                var arrayItens = localStorage.getItem("agenda");
+
+                if(arrayItens == null){
+                    arrayItens = [];
+                }
+                else{
+                    arrayItens = JSON.parse(arrayItens);
+                }
+
+                arrayItens.push(contato);
+                localStorage.setItem("agenda",JSON.stringify(arrayItens));
+            }
+            function adiciona(){
+                var nome = document.getElementById("nome");
+                var nomeInput = nome.value;
+                nome.value = "";
+
+                var cel = document.getElementById("cel");
+                var celInput = cel.value;
+                cel.value = "";
+
+                var contato = [nomeInput, celInput];
+               if(contato == ""){
+                    alert("precisa preencher campo");     
+               }
+               else{
+                    var li = document.createElement("li");
+                    li.innerHTML = contato;
+
+                    var ul = document.getElementById("listaCtt");
+                    ul.appendChild(li);
+
+                    salva(contato);
+               }
+
+            }
+            function exclui(){
+                var arrayItens = localStorage.getItem("agenda");
+
+                var ul = document.getElementById("listaCtt");
+                
+                var nome = document.getElementById("nome");
+                var nomeInput = nome.value;
+                nome.value = "";
+
+                var cel = document.getElementById("cel");
+                var celInput = cel.value;
+                cel.value = "";
+
+                var contato = [nomeInput, celInput];
+                if(contato == ""){
+                    alert("preencha todos os campos");     
+                }
+                else{
+                    arrayItens = JSON.parse(arrayItens);
+                    var li = document.createElement("li");
+                    li.innerHTML = contato;
+                    ul.removeChild(li);
+                }
+                salva(contato);
+            }
+     </script>
+</body>
+</html>
